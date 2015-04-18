@@ -46,30 +46,6 @@ object TransformationBackend {
   def main(args: Array[String]): Unit =  {
     val port = if (args.isEmpty) "0" else args(0)
 
-    val appConfStr =
-      """
-        | akka {
-        |   actor {
-        |     provider = "akka.cluster.ClusterActorRefProvider"
-        |   }
-        |   remote {
-        |     log-remote-lifecycle-events = off
-        |     netty.tcp {
-        |       hostname = "127.0.0.1"
-        |       port = 0
-        |     }
-        |   }
-        |
-        |   cluster {
-        |     seed-nodes = [
-        |       "akka.tcp://ClusterSystem@127.0.0.1:2551",
-        |     ]
-        |
-        |     auto-down-unreachable-after = 10s
-        |   }
-        | }
-      """.stripMargin
-
     val config = ConfigFactory.parseString(s"akka.remote.netty.tcp.port=$port")
       .withFallback(ConfigFactory.parseString("akka.cluster.roles=[backend]"))
       .withFallback(ConfigFactory.parseString(ApplicationConf.getStr))
